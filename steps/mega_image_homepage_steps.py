@@ -14,13 +14,14 @@ def step_impl(context):
 def step_impl(context):
     context.home_page_object.check_if_login_is_successfull()
 
-@when('Home page: The user searches for "apa naturala 5l bucovina" in the search box')
-def step_impl(context):
-    context.home_page_object.search_apa_bucovina()
+@when('Home page: The user searches for "{product_name}" in the search box')
+def step_impl(context, product_name):
+    context.home_page_object.insert_search_value(product_name)
+    context.home_page_object.click_search_button()
 
-@then('Home page: The user found the item searched for')
-def step_impl(context):
-    context.home_page_object.check_if_product_searched_is_found()
+@then('Home page: The user gets at least "{no_of_results}" results returned')
+def step_impl(context, no_of_results):
+    context.home_page_object.check_search_results(no_of_results)
 
 @when('Home page: The user adds one "Apa minerala naturala plata 5L" to shopping cart')
 def step_impl(context):
@@ -54,9 +55,9 @@ def step_impl(context):
 def step_impl(context):
     context.home_page_object.search_for_cascaval_desenvis()
 
-@when('Home page: The user adds "Broasca testoasa", "Calut de mare" and navigates to shopping cart')
+@when('Home page: The user adds "Pesto cu busuioc", "Paste alimentare" and navigates to shopping cart')
 def step_impl(context):
-    context.home_page_object.add_broasca_calut_to_shopping_cart()
+    context.home_page_object.add_pesto_si_paste_to_shopping_cart()
 
 
 

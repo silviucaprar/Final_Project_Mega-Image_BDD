@@ -31,9 +31,14 @@ Feature: Check that the following 10 scenarios pass
     Then Home page: The user is logged in successfully
 
   @regression
-  Scenario: Check if the user can make a search for a specific product on Home page
-    When Home page: The user searches for "apa naturala 5l bucovina" in the search box
-    Then Home page: The user found the item searched for
+  Scenario Outline: Check if the user can make a search for a specific product on Home page
+    When Home page: The user searches for "<product_name>" in the search box
+    Then Home page: The user gets at least "<no_of_results>" results returned
+    Examples:
+      | product_name | no_of_results |
+      | ciocolata    | 900           |
+      | cereale      | 1200          |
+      | sampanie     | 100           |
 
   @regression
   Scenario: Check if a product's double quantity's price is displayed correctly in shopping cart
@@ -67,5 +72,5 @@ Feature: Check that the following 10 scenarios pass
 
   @regression
   Scenario: Check that the total price of two products in shopping cart is correctly displayed
-    When Home page: The user adds "Broasca testoasa", "Calut de mare" and navigates to shopping cart
+    When Home page: The user adds "Pesto cu busuioc", "Paste alimentare" and navigates to shopping cart
     Then Cart page: The user check if the total price for the two products is correctly displayed

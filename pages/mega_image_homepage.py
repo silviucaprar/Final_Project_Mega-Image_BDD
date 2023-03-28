@@ -18,30 +18,19 @@ class Home_page(Base_page):
     SEARCH_TEXTBOX = (By.XPATH, '//input[@aria-label="Cauta"]')
     SEARCH_BUTTON = (By.XPATH, '//button[@data-testid="header-search-submit"]')
     APA_BUCOVINA = (By.XPATH, '(//a[@href="/Apa-si-sucuri/Apa/Apa-plata/Apa-minerala-naturala-plata-5L/p/31658"])[3]')
+    SEARCH_RESULTS = (By.XPATH, '//div[@data-testid="search-results-count-info"]')
     DELIVERY_CLOSE_BUTTON = (By.XPATH, '(//button[@aria-label="Inchide"])[2]')
     ADAUGA_BUTTON = (By.XPATH, '(//button[@data-testid="product-block-add"])[1]')
     SHOPPING_CART = (By.XPATH, '//a[@data-testid="header-minibasket"]')
     PAINE_SECARA = (By.XPATH, '(//a[@href="/Paine-cafea-cereale-si-mic-dejun/Paine-si-specialitati/Paine/Paine-cu-secara-400g/p/90669"])[3]')
     CASCAVAL_DESENVIS = (By.XPATH, '(//a[@href="/Lactate-si-oua/Branzeturi/Cascaval/Cascaval-350g/p/82856"])[3]')
-    BROASCA_SI_CALUT = (By.XPATH, '(//button[@data-testid="product-block-add"])[1]')
+    PESTO_SI_PASTE = (By.XPATH, '(//button[@data-testid="product-block-add"])[4]')
 
     def navigate_to_homepage(self):
         self.chrome.get(self.HOMEPAGE)
 
     def navigate_to_login_page(self):
         self.chrome.find_element(*self.CONTUL_MEU_BUTTON).click()
-
-    def search_apa_bucovina(self):
-        self.chrome.find_element(*self.SEARCH_TEXTBOX).send_keys("apa naturala 5l bucovina")
-        try:
-            self.chrome.find_element(*self.SEARCH_BUTTON).click()
-        except StaleElementReferenceException:
-            self.chrome.find_element(*self.SEARCH_BUTTON).click()
-
-    def check_if_product_searched_is_found(self):
-        expected = "Apa minerala naturala plata 5L"
-        actual = self.chrome.find_element(*self.APA_BUCOVINA).text
-        assert expected == actual, f"ERROR: Expected: {expected}, Actual: {actual}"
 
     def add_apa_bucovina_to_cart(self):
         sleep(2)
@@ -51,6 +40,17 @@ class Home_page(Base_page):
             self.chrome.find_element(*self.DELIVERY_CLOSE_BUTTON).click()
         except:
             pass
+
+    def insert_search_value(self, product_name):
+        self.chrome.find_element(*self.SEARCH_TEXTBOX).send_keys(product_name)
+
+    def click_search_button(self):
+        self.chrome.find_element(*self.SEARCH_BUTTON).click()
+
+    def check_search_results(self, no_of_results):
+        no_results = self.chrome.find_element(*self.SEARCH_RESULTS).text
+        result = no_results.replace(" Rezultatele pentru", "")
+        assert int(result) >= int(no_of_results), f"ERROR: No of Results is incorrect. EXPECTED: {no_of_results}, ACTUAL {result}"
 
     def navigate_to_shopping_cart(self):
         WebDriverWait(self.chrome, 10).until(EC.text_to_be_present_in_element(self.SHOPPING_CART, "1"))
@@ -119,10 +119,11 @@ class Home_page(Base_page):
         WebDriverWait(self.chrome, 10).until(EC.text_to_be_present_in_element(self.SHOPPING_CART, "3"))
         self.chrome.find_element(*self.SHOPPING_CART).click()
 
-    def add_broasca_calut_to_shopping_cart(self):
+    def add_pesto_si_paste_to_shopping_cart(self):
         self.chrome.find_element(*self.SEARCH_TEXTBOX).send_keys(Keys.PAGE_DOWN)
-        self.chrome.find_element(*self.BROASCA_SI_CALUT).click()
-        self.chrome.find_element(*self.BROASCA_SI_CALUT).click()
+        self.chrome.find_element(*self.SEARCH_TEXTBOX).send_keys(Keys.PAGE_DOWN)
+        self.chrome.find_element(*self.PESTO_SI_PASTE).click()
+        self.chrome.find_element(*self.PESTO_SI_PASTE).click()
         try:
             WebDriverWait(self.chrome, 10).until(EC.presence_of_element_located(self.DELIVERY_CLOSE_BUTTON))
             self.chrome.find_element(*self.DELIVERY_CLOSE_BUTTON).click()
